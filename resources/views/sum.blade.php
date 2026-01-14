@@ -9,7 +9,11 @@
 
 <body>
     <h1>sum</h1>
-    <p>{{dd($result)}}</p>
+    <tr>
+        <td>結果{{$result['sum']}}</td>
+        <td>數字{{$result['num']}}</td>
+        <td>加減乘除{{$result['operators']}}</td>
+    </tr>
 </body>
 
 </html>
