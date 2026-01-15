@@ -42,7 +42,9 @@
         <div class="col-6 col-lg-3">
             <div class="card h-100">
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modal-{{ $index }}">
-                    <img src="{{ asset('image/' . $item->img) }}" class="card-img-top img-fluid" alt="商品名稱" />
+                    <a href="{{ route('product.show', $item->id) }}">
+                        <img src="{{ asset('image/' . $item->img) }}" class="card-img-top img-fluid" alt="商品名稱" />
+                    </a>
                 </button>
 
                 <div class="card-body">
@@ -52,7 +54,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-{{ $index }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+        <!-- <div class="modal fade" id="modal-{{ $index }}" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -64,7 +66,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         @endforeach
         @else
         <div class="text-center py-5">

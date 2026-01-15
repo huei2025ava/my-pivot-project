@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SnoopyController;
 use App\Models\Product;  // 1. 必須引入Model
 use Illuminate\Support\Facades\Route;
@@ -13,3 +14,5 @@ Route::get('/', function () {
 });
 
 Route::get('/welcome/{name?}', [SnoopyController::class, 'sayHello']);
+
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
