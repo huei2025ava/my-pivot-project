@@ -7,9 +7,16 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function show($id) {
-    $product = Product::findOrFail($id);
+    public function index()
+    {
+        $products = Product::all();
+        return view('snoopy', compact('products'));
+    }
 
-    return view('product_detail', compact('product'));
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view('product_detail', compact('product'));
     }
 }
