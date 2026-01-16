@@ -66,7 +66,11 @@
         </div>
     </div>
 
-    <div class="text-center"><img src="{{ asset('image/logo.png') }}" alt="" /></div>
+    <div class="text-center">
+        <a href="{{ route('home') }}">
+            <img src="{{ asset('image/logo.png') }}" alt="" />
+        </a>
+    </div>
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">

@@ -49,7 +49,7 @@
 
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ $item->name }}</h5>
-                    <p class="card-text text-center">{{ $item->price }}</p>
+                    <p class="card-text text-center">NT$ {{ $item->price }}</p>
                 </div>
             </div>
         </div>

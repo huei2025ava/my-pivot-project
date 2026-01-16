@@ -11,7 +11,7 @@
             <p class="text-danger h3">NT$ {{ $product->price }}</p>
             <hr>
             <button class="btn btn-primary btn-lg">加入購物車</button>
-            <a href="{{ url('/') }}" class="btn btn-outline-secondary btn-lg">回到首頁</a>
+            <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg">回到首頁</a>
         </div>
     </div>
 </div>
