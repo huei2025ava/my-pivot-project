@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\File; //處理檔案（刪除、移動、檢查是否存在）的工具箱，使用 File 的 methods
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -35,7 +36,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'price' => 'required|numeric|min:0',
-            'img' => 'nullable|image|max:2048', // nullable 這個欄位可以是 NULL（可以不填值）
+            'img' => 'nullable|image|max:10240', // nullable 這個欄位可以是 NULL（可以不填值）
         ]);
 
         // B. 圖片上傳
@@ -44,7 +45,13 @@ class ProductController extends Controller
         if ($request->hasFile('img')) {
             $file = $request->file('img');
 
-            $imageName = time() . '_' . $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+
+            // dd($extension);
+
+            $imageName = time() . '_' . Str::random(5) . '.' . $extension;
+
+            // dd($imageName);
 
             $file->move(public_path('image'), $imageName);
             // $path = $request->file('img')->store('products', 'public');
@@ -70,7 +77,8 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id) //Request 是要後面的這個變數必須符合 Request 的格式
-    {$product = Product::findOrFail($id);
+    {
+        $product = Product::findOrFail($id);
 
         // 1. 基本資料驗證，之後可用 StoreProductRequest 修改
         $request->validate([
@@ -93,14 +101,14 @@ class ProductController extends Controller
             $imageName = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('image'), $imageName);
         }
-        
+
         // 3. 更新資料庫
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
             'img' => $imageName, // 無論有無換圖，這行都適用
         ]);
-        
+
         return redirect()->route('products.index')->with('success', 'Snoopy 商品已更新！');
     }
 }
