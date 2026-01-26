@@ -98,10 +98,10 @@ class ProductController extends Controller
             }
             // 儲存新圖
             $file = $request->file('img');
-            
+
             $extension = $file->getClientOriginalExtension();
             $imageName = time() . '_' . Str::random(5) . '.' . $extension;
-            
+
             $file->move(public_path('image'), $imageName);
         }
 
@@ -113,5 +113,19 @@ class ProductController extends Controller
         ]);
 
         return redirect()->route('home')->with('success', 'Snoopy 商品已更新！');
+    }
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $imagePath = public_path('image/'. $product->img);
+
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
+        }
+
+        $product->delete();
+
+        return redirect()->route('home')->with('success','商品與圖片已成功移除！');
+
     }
 }
