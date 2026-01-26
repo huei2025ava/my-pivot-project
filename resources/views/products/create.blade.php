@@ -16,7 +16,7 @@
     </div>
 
     <div>
-        <label for="">商品圖片：</label>
+        <label for="">商品圖片：(不超過5MB)</label>
         <input type="file" name="img" id="imgInput" accept="image/*">
     </div>
 

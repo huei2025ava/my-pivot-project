@@ -36,7 +36,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'price' => 'required|numeric|min:0',
-            'img' => 'nullable|image|max:10240', // nullable 這個欄位可以是 NULL（可以不填值）
+            'img' => 'nullable|image|max:5120', // nullable 這個欄位可以是 NULL（可以不填值）
         ]);
 
         // B. 圖片上傳
@@ -84,11 +84,11 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'img' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         // 2. 處理圖片邏輯
-        $imageName = $product->img; // 找出該 $id 的 image
+        $imageName = $product->img; // 找出該 $id 的 欄位為 img
 
         if ($request->hasFile('img')) {
             // 如果有上傳新圖：刪除舊圖
@@ -98,7 +98,10 @@ class ProductController extends Controller
             }
             // 儲存新圖
             $file = $request->file('img');
-            $imageName = time() . '_' . $file->getClientOriginalName();
+            
+            $extension = $file->getClientOriginalExtension();
+            $imageName = time() . '_' . Str::random(5) . '.' . $extension;
+            
             $file->move(public_path('image'), $imageName);
         }
 
@@ -109,6 +112,6 @@ class ProductController extends Controller
             'img' => $imageName, // 無論有無換圖，這行都適用
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Snoopy 商品已更新！');
+        return redirect()->route('home')->with('success', 'Snoopy 商品已更新！');
     }
 }
