@@ -10,17 +10,13 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function admin()
-    {
-        $products = Product::all();
-        return view('admin_products', compact('products'));
-
-    }
-
     public function index()
     {
         $products = Product::all();
-        return view('snoopy', compact('products'));
+
+        $totalProducts = $products->count();
+        $totalPrice = $products->sum('price');
+        return view('admin_products', compact('products', 'totalProducts', 'totalPrice'));
     }
 
     public function show($id)

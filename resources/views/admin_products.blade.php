@@ -5,6 +5,7 @@
     @if(isset($products) && $products->count() > 0)
     <div class="row g-3">
         @foreach($products as $index => $item)
+
         <div class="col-6 col-lg-3">
             <div class="card h-100">
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modal-{{ $index }}">
