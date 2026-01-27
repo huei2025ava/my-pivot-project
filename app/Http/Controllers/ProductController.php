@@ -10,6 +10,13 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    public function admin()
+    {
+        $products = Product::all();
+        return view('admin_products', compact('products'));
+
+    }
+
     public function index()
     {
         $products = Product::all();
@@ -125,7 +132,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('home')->with('success','商品與圖片已成功移除！');
+        return redirect()->route('home')->with('success', '商品與圖片已成功移除！');
 
     }
 }

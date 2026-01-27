@@ -1,3 +1,5 @@
+@extends('layouts.admin')
+@section('content')
 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
 
     @csrf
@@ -44,3 +46,4 @@ document.getElementById('imgInput').onchange = function(evt) {
 
 }
 </script>
+@endsection

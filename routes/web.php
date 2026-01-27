@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 //     // 3. 回傳 view 的同時， 把 $products 資料包進去給網頁
 //     return view('snoopy', compact('products'));
 // });
+Route::get('/admin/products',[ProductController::class, 'admin'])->name('admin.products');
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
