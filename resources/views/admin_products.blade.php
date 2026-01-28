@@ -46,9 +46,7 @@
         <div class="col-6 col-lg-3">
             <div class="card h-100">
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modal-{{ $index }}">
-                    <a href="{{ route('product.show', $item->id) }}">
-                        <img src="{{ asset('image/' . $item->img) }}" class="card-img-top img-fluid" alt="商品名稱" />
-                    </a>
+                    <img src="{{ asset('image/' . $item->img) }}" class="card-img-top img-fluid" alt="商品名稱" />
                 </button>
 
                 <div class="card-body">
@@ -138,7 +136,7 @@
                 <div style=" margin-top: 10px">
                     <p>商品預覽</p>
                     <img id="preview-new" src="#" alt="預覽圖"
-                        style="width: 200px; dispaly: none; border: 1px solid black; padding: 5px;">
+                        style="width: 200px; display: none; border: 1px solid black; padding: 5px;">
                     <input type="file" name="img" onchange="unifiedPreview(event, 'new')" required>
                 </div>
 

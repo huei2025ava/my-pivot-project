@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SnoopyController;
 use App\Models\Product;  // 1. 必須引入Model
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminMiddleware;
 
 // Route::get('/', function () {
 //     // 2. 叫 Product 模型去資料庫把所有資料撈出來
@@ -13,10 +14,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('snoopy', compact('products'));
 // });
 
-Route::get('/', [ProductController::class, 'index'])->name('home');
-Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
-Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin', [ProductController::class, 'index'])->name('home');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+});
