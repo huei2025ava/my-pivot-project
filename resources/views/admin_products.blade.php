@@ -64,53 +64,46 @@
                             </button>
                         </form>
 
-                        <a href="{{ route('products.edit', $item->id) }}" class="btn btn-info btn-circle btn-sm">
+                        <button class="btn btn-info btn-circle btn-sm" data-toggle="modal"
+                            data-target="#updateProductModal-{{ $item->id }}">
                             <i class="fas fa-edit"></i>
-                        </a>
+                        </button>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 新增商品彈出視窗 -->
-        <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog">
+        <!-- 編輯商品彈出視窗 -->
+        <div class="modal fade" id="updateProductModal-{{ $item->id }}" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">新增 Snoopy 商品</h5>
+                        <h5 class="modal-title">更新 Snoopy 商品</h5>
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('products.update', $item->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
-                        <div>
-                            <label for="">商品名稱</label>
-                            <input type="text" name="name" value="{{ old('name') }}">
-                            @error('name')
-                            <p style="color:red">{{ $message }}</p>
-                            @enderror
+                        @method('PUT')
+                        <label>商品名稱：</label>
+                        <input type="text" name="name" value="{{ old('name', $item->name) }}">
+
+                        <label>價格：</label>
+                        <input type="number" name="price" value="{{ old('price', $item->price) }}">
+
+                        <label>目前商品圖片：</label>
+                        <div class="mb-3">
+                            <img id="preview-{{ $item->id }}" src="{{ asset('image/' . $item->img) }}" width="200px"
+                                style="display:block; margin-bottom:10px;">
                         </div>
 
-                        <div>
-                            <label for="">商品價格：</label>
-                            <input type="number" name="price" value="{{ old('price') }}">
-                        </div>
+                        <label>更換圖片：</label>
+                        <input type="file" name="img" onchange="unifiedPreview(event, '{{ $item->id }}')">
+                        <button type="submit">確認更新</button>
 
-                        <div>
-                            <label for="">商品圖片：(不超過5MB)</label>
-                            <input type="file" name="img" id="imgInput" accept="image/*">
-                        </div>
-
-                        <div style=" margin-top: 10px">
-                            <p>圖片預覽</p>
-                            <img id="preview" src="#" alt="預覽圖"
-                                style="width: 200px; dispaly: none; border: 1px solid black; padding: 5px;">
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-primary">確認上架</button>
-                        </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -118,19 +111,61 @@
     </div>
 
 </div>
+
+<!-- 新增商品彈出視窗 -->
+<div class="modal fade" id="createProductModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">新增 Snoopy 商品</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div>
+                    <label for="">商品名稱</label>
+                    <input type="text" name="name" value="{{ old('name') }}">
+                    @error('name')
+                    <p style="color:red">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="">商品價格：</label>
+                    <input type="number" name="price" value="{{ old('price') }}">
+                </div>
+
+                <div style=" margin-top: 10px">
+                    <p>商品預覽</p>
+                    <img id="preview-new" src="#" alt="預覽圖"
+                        style="width: 200px; dispaly: none; border: 1px solid black; padding: 5px;">
+                    <input type="file" name="img" onchange="unifiedPreview(event, 'new')" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">確認上架</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script>
-document.getElementById('imgInput').onchange = function(evt) {
+function unifiedPreview(event, id) {
+    const file = event.target.files[0];
+    // 當 id 是 'new'，這裡會找 'preview-new'
+    // 當 id 是 '5'，這裡會找 'preview-5'
+    const previewImg = document.getElementById('preview-' + id);
 
-    // console.log(this.files)
-    const [file] = this.files;
-    // const file = this.files[0];
+    if (file && previewImg) {
+        // 更新圖片路徑
+        previewImg.src = URL.createObjectURL(file);
 
-    if (file) {
-        const preview = document.getElementById('preview');
-        preview.src = URL.createObjectURL(file)
-        preview.style.display = 'block'
+        // 確保圖片是顯示出來的 (因為新增商品一開始可能是隱藏的)
+        previewImg.style.display = 'block';
     }
-
 }
 </script>
 @endsection
