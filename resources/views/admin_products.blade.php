@@ -4,7 +4,7 @@
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">商品管理</h1>
-    <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#createProductModal">
+    <button class="btn btn-primary shadow-sm" data-toggle="modal" data-target="#createProductModal">
         <i class="fas fa-plus fa-sm text-white-50"></i> 新增商品
     </button>
 </div>
@@ -40,7 +40,6 @@
 </div>
 
 <div class="container my-5">
-    @if(isset($products) && $products->count() > 0)
     <div class="row g-3">
         @foreach($products as $index => $item)
 
@@ -73,30 +72,65 @@
             </div>
         </div>
 
-        <!-- <div class=" modal fade" id="modal-{{ $index }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <img src="{{ asset('image/' . $item->img) }}" class="card-img-top img-fluid"
-                                        alt="商品名稱" />
-                                </div>
-                            </div>
+        <!-- 新增商品彈出視窗 -->
+        <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">新增 Snoopy 商品</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div>
+                            <label for="">商品名稱</label>
+                            <input type="text" name="name" value="{{ old('name') }}">
+                            @error('name')
+                            <p style="color:red">{{ $message }}</p>
+                            @enderror
                         </div>
-                </div> -->
-        @endforeach
-        @else
-        <div class="text-center py-5">
-            <p class="text-muted">
-                🐾 汪！目前還沒有商品上架喔，請稍後再回來。
-            </p>
+
+                        <div>
+                            <label for="">商品價格：</label>
+                            <input type="number" name="price" value="{{ old('price') }}">
+                        </div>
+
+                        <div>
+                            <label for="">商品圖片：(不超過5MB)</label>
+                            <input type="file" name="img" id="imgInput" accept="image/*">
+                        </div>
+
+                        <div style=" margin-top: 10px">
+                            <p>圖片預覽</p>
+                            <img id="preview" src="#" alt="預覽圖"
+                                style="width: 200px; dispaly: none; border: 1px solid black; padding: 5px;">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary">確認上架</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        @endif
+        @endforeach
     </div>
 
 </div>
+<script>
+document.getElementById('imgInput').onchange = function(evt) {
+
+    // console.log(this.files)
+    const [file] = this.files;
+    // const file = this.files[0];
+
+    if (file) {
+        const preview = document.getElementById('preview');
+        preview.src = URL.createObjectURL(file)
+        preview.style.display = 'block'
+    }
+
+}
+</script>
 @endsection
