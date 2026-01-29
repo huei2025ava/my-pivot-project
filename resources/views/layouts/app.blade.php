@@ -57,8 +57,26 @@
                 <input type="text" class="search-input" placeholder="搜尋商品" />
                 <i class="fas fa-search position-absolute" style="right: 10px; top: 10px; color: #ccc"></i>
             </div>
-            <a href="#"><i class="fas fa-envelope me-1"></i> 客服中心</a>
-            <a href="#"><i class="fas fa-user me-1"></i> 登入/註冊頁</a>
+            @auth
+            <!-- 1. 如果登入了，而且身分是管理員 -->
+            @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.index') }}" style="color: #ff4d4d; font-weight: bold;">
+                ⚙️ 進入管理後台
+            </a>
+            @endif
+
+            <!-- 2. 登入後都會顯示登出按鈕 -->
+            <span class="user-name">你好，{{ auth()->user()->name }}</span>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit">登出</button>
+            </form>
+            @else
+
+            <!-- 3. 如果沒登入，顯示登入/註冊 -->
+            <a href="{{ route('login') }}">登入</a>
+            @endauth
+
             <a href="#">
                 <i class="fas fa-shopping-cart me-1"></i> 購物車
                 <span class="cart-badge">0</span>

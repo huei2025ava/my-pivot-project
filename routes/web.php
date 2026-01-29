@@ -1,22 +1,23 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SnoopyController;
+use App\Http\Controllers\HomeController;
 use App\Models\Product;  // 1. 必須引入Model
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
 
-// Route::get('/', function () {
-//     // 2. 叫 Product 模型去資料庫把所有資料撈出來
-//     $products = Product::all();
+// 登入登出
+Route::get('/login',[LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login',[LoginController::class, 'login']);
+Route::post('/logout',[LoginController::class, 'logout'])->name('logout');
 
-//     // 3. 回傳 view 的同時， 把 $products 資料包進去給網頁
-//     return view('snoopy', compact('products'));
-// });
+// 前台
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// 後台
 Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('/admin', [ProductController::class, 'index'])->name('home');
+    Route::get('/', [ProductController::class, 'index'])->name('admin.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');

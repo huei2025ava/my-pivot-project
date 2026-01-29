@@ -70,7 +70,7 @@ class ProductController extends Controller
         ]);
 
         // D. 導回去，並顯示成功
-        return redirect()->route('home')->with('success', '商品已成功上架!');
+        return redirect()->route('admin.index')->with('success', '商品已成功上架!');
     }
 
     public function edit($id)
@@ -115,7 +115,7 @@ class ProductController extends Controller
             'img' => $imageName, // 無論有無換圖，這行都適用
         ]);
 
-        return redirect()->route('home')->with('success', 'Snoopy 商品已更新！');
+        return redirect()->route('admin.index')->with('success', 'Snoopy 商品已更新！');
     }
     public function destroy($id)
     {
@@ -128,7 +128,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('home')->with('success', '商品與圖片已成功移除！');
+        return redirect()->route('admin.index')->with('success', '商品與圖片已成功移除！');
 
     }
 }
