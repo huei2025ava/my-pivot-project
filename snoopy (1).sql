@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2026-01-15 03:18:30
+-- 產生時間： 2026-02-04 09:00:41
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -141,12 +141,40 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(6, '0001_01_01_000000_create_users_table', 1),
-(7, '0001_01_01_000001_create_cache_table', 1),
-(8, '0001_01_01_000002_create_jobs_table', 1),
-(9, '2025_12_23_073459_create_ai_artworks_table', 1),
-(10, '2026_01_07_071305_create_products_table', 1),
-(12, '2026_01_14_061256_create_cloths_table', 2);
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2025_12_23_073459_create_ai_artworks_table', 1),
+(5, '2026_01_07_071305_create_products_table', 1),
+(6, '2026_01_14_061256_create_cloths_table', 1),
+(7, '2026_01_28_064925_add_role_to_users_table', 1),
+(8, '2026_02_04_071652_create_orders_table', 2),
+(9, '2026_02_04_071735_create_order_items_table', 2),
+(10, '2026_02_04_072908_add_stock_to_products_table', 2);
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- 資料表結構 `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -180,22 +208,22 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `img`, `created_at`, `updated_at`) VALUES
-(1, '奧拉夫達摩藍色零錢包', 999, 'oblue.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(2, 'SNOOPY 冰淇淋造型吊飾', 390, 'sice.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(3, 'OLAF 冰淇淋造型吊飾', 390, 'oice.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(4, '史努比卡其色斜背小包', 550, 'syebag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(5, '史努比黑色斜背小包', 550, 'ssbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(6, '奧拉夫軍綠色斜背小包', 550, 'sgrebag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(7, '史努比大頭造型抱枕', 980, 'snake.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(8, '史努比粉色手提麻布袋', 420, 'sbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(9, 'SNOOPY 經典手提麻布袋', 420, 'sbigbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(10, 'OLAF 經典手提麻布袋', 420, 'obag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(11, '史努比與奧拉夫條紋提袋', 720, 'allbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(12, '史努比黃色保溫杯', 850, 'yecup.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(13, '奧拉夫米色保溫杯', 850, 'ocup.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(14, '史努比彩色條紋大提袋', 680, 'scolorbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(15, '奧拉夫彩色條紋大提袋', 680, 'ocolorbag.jpg', '2026-01-06 23:45:54', '2026-01-06 23:45:54'),
-(17, '史努比達摩紅色零錢包', 290, 'sred.jpg', NULL, NULL);
+(1, '奧拉夫達摩藍色零錢包', 290, 'oblue.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(2, 'SNOOPY 冰淇淋造型吊飾', 390, '1770167677_aGKMg.jpg', '2026-02-03 17:04:52', '2026-02-03 17:14:37'),
+(3, 'OLAF 冰淇淋造型吊飾', 390, '1770167537_gISJU.jpg', '2026-02-03 17:04:52', '2026-02-03 17:12:17'),
+(4, '史努比卡其色斜背小包', 550, 'syebag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(5, '史努比黑色斜背小包', 550, 'ssbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(6, '奧拉夫軍綠色斜背小包', 550, 'sgrebag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(7, '史努比大頭造型抱枕', 980, 'snake.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(8, '史努比粉色手提麻布袋', 420, 'sbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(9, 'SNOOPY 經典手提麻布袋', 420, 'sbigbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(10, 'OLAF 經典手提麻布袋', 420, 'obag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(11, '史努比與奧拉夫條紋提袋', 720, 'allbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(12, '史努比黃色保溫杯', 850, 'yecup.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(13, '奧拉夫米色保溫杯', 850, 'ocup.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(14, '史努比彩色條紋大提袋', 680, 'scolorbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(15, '奧拉夫彩色條紋大提袋', 680, 'ocolorbag.jpg', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(17, 'olaf', 999, '1770167763_epmfg.png', '2026-02-03 17:16:03', '2026-02-03 17:16:03');
 
 -- --------------------------------------------------------
 
@@ -217,7 +245,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('QVRKIWkd5mOsVrksZLyFJ7YK22a1HRkgxhn2C3sp', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiSjBFSXY3UFhEQWRXUVM0NHVJdG9MMFA4N2Riblg2MWx4S0JUQmJ5QiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1768443425);
+('DqUza90YDGo6RF4LQV9qCQCvPe2BU1c4Rsr8YJIb', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidlRzY2w4eE5XZVdDU3VmQVJScU44cVdDMkY3V1pBc2J0NjgwSUZ1RyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9fQ==', 1770188700);
 
 -- --------------------------------------------------------
 
@@ -229,6 +257,7 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL DEFAULT 'user',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -240,8 +269,10 @@ CREATE TABLE `users` (
 -- 傾印資料表的資料 `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Test User', 'test@example.com', '2026-01-06 23:45:53', '$2y$12$tFw90f.NIW3EX/Q/17vs1uiJiNH.qyuSkAQ4FSd6Dy0INWbWFqPbO', 'Xkv7apzdfe', '2026-01-06 23:45:54', '2026-01-06 23:45:54');
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin@example.com', 'admin', '2026-02-03 17:04:52', '$2y$12$UEOUn377gNS6MSN95k4kRes5KEFXAhNkmp4fKy1Z4mOy6YcpTfUrm', 'v1cOrk6MuJzgdK6EJb8ouVlJWUzbKVfX4eTolYz5O6NjhmsrIkXtHDpp8NIN', '2026-02-03 17:04:52', '2026-02-03 17:04:52'),
+(2, 'Ken', 'ken@gmail.com', 'user', NULL, '$2y$12$7C1JtAVXwbbl2v/NKgOLZOuCWnlr4JZQR4SMNm6ngDfdCk40Vj/BC', NULL, '2026-02-03 22:36:31', '2026-02-03 22:36:31'),
+(3, 'John', 'john@gmail.com', 'user', NULL, '$2y$12$U75zrZYc8Dtny/fMx.a.heWBqhBv.eQ1nLJo.bH9hGAO5jCsPYd0K', NULL, '2026-02-03 22:53:34', '2026-02-03 22:53:34');
 
 --
 -- 已傾印資料表的索引
@@ -295,6 +326,18 @@ ALTER TABLE `job_batches`
 -- 資料表索引 `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 資料表索引 `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 資料表索引 `order_items`
+--
+ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -356,7 +399,19 @@ ALTER TABLE `jobs`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用資料表自動遞增(AUTO_INCREMENT) `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `products`
@@ -368,7 +423,7 @@ ALTER TABLE `products`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

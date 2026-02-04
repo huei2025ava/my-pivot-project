@@ -75,6 +75,7 @@
 
             <!-- 3. 如果沒登入，顯示登入/註冊 -->
             <a href="{{ route('login') }}">登入</a>
+            <a href="{{ route('register') }}">註冊</a>
             @endauth
 
             <a href="#">
