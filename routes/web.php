@@ -9,6 +9,7 @@ use App\Models\Product;  // 1. 必須引入Model
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
 
+
 // 註冊
 Route::get('/register',[RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
