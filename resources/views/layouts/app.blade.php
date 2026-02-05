@@ -78,7 +78,7 @@
             <a href="{{ route('register') }}">註冊</a>
             @endauth
 
-            <a href="#">
+            <a href="{{ route('cart.index') }}">
                 <i class="fas fa-shopping-cart me-1"></i> 購物車
                 <span class="cart-badge">0</span>
             </a>

@@ -14,7 +14,7 @@ class CartController extends Controller
         
         if (isset($cart[$id])) {
             // 情況 A：籃子裡已經有這個商品了
-           $cart['$id']['quantity']++;
+           $cart[$id]['quantity']++;
         }else{
             // 情況 B：這是一個新商品，第一次放進籃子
             $cart[$id] = [
@@ -24,8 +24,15 @@ class CartController extends Controller
                 "img" => $product->img,
             ];
         }
-
+        // dd($cart);
         session()->put('cart', $cart);
         return redirect()->back()->with('success', '商品已加入購物車！');
+    }
+
+    public function index() {
+        // 從 Session 拿資料，如果沒資料就給空陣列
+        $cart = session()->get('cart', []);
+
+        return view('cart.index', compact('cart'));
     }
 }

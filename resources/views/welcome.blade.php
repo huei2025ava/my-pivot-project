@@ -49,9 +49,14 @@
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ $item->name }}</h5>
                     <p class="card-text text-center">NT$ {{ $item->price }}</p>
+                    <form action="{{ route('add.to.cart', $item->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-success">加入購物車</button>
+                    </form>
                 </div>
             </div>
         </div>
+
         @endforeach
     </div>
     @else
