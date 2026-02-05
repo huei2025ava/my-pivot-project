@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total_amount', 10, 2);
-            $table->string('status')->default('pending');
+            $table->decimal('total_price', 10, 2);
+            $table->string('status')->default('pending'); // 狀態：待處理、已付款等
             $table->timestamps();
         });
     }
