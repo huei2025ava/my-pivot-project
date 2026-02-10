@@ -24,7 +24,9 @@
                 <td><img src="{{ asset('image/' . $details['img']) }}" width="50"></td>
                 <td>{{ $details['name'] }}</td>
                 <td>${{ $details['price'] }}</td>
-                <td>{{ $details['quantity'] }}</td>
+                <td>
+                    <input type="number" value="{{ $details['quantity'] }}">
+                </td>
                 <td>${{ $details['price'] * $details['quantity'] }}</td>
             </tr>
             @endforeach
@@ -32,10 +34,10 @@
     </table>
 
     <div class="text-end">
-        <h3>總計：${{ $total }}</h3>
         {{-- 這裡就是妳下一步要做的結帳按鈕 --}}
         <form action="{{ route('checkout') }}" method="POST">
             @csrf
+            <input type="hidden" name="total_price" value="{{ $total }}">
             <button type="submit" class="btn btn-primary">確認結帳</button>
         </form>
     </div>
