@@ -67,7 +67,7 @@ class OrderController extends Controller
             // 清空購物車，因為已經買單了
             Session::forget('cart');
 
-            return redirect()->route('home')->with('success', '訂單已成立！');
+            return redirect()->route('cart.index')->with('success', '訂單已成立！');
         } catch (\Exception $e) {
             // --- D. 發生意外時的處理 ---
             // 如果上面 try 裡面任何一行出錯（例如庫存不夠或是資料庫斷線）

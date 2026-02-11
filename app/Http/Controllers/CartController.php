@@ -35,4 +35,8 @@ class CartController extends Controller
 
         return view('cart.index', compact('cart'));
     }
+
+    public function update(Request $request) {
+        //未完成
+    }
 }

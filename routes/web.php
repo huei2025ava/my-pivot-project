@@ -16,6 +16,8 @@ Route::get('/cart',[CartController::class, 'index'])->name('cart.index');
 Route::post('/checkout',[OrderController::class, 'checkout'])->name('checkout');
 Route::post('/add-to-cart/{id}',[CartController::class, 'addToCart'])->name('add.to.cart');
 Route::delete('/remove-from-cart/{id}',[CartController::class, 'remove'])->name('remove.from.cart');
+Route::patch('/update-cart',[CartController::class, 'update'])->name('update.cart');
+
 
 // 註冊
 Route::get('/register',[RegisterController::class, 'showRegistrationForm'])->name('register');

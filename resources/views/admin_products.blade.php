@@ -52,6 +52,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ $item->name }}</h5>
                     <p class="card-text text-center">NT$ {{ $item->price }}</p>
+                    <p class="card-text text-center">庫存量: {{ $item->stock }}</p>
                     <div class="d-flex align-items-center justify-content-center">
                         <form action="{{ route('products.destroy', $item->id) }}" method="POST" class="mr-3">
                             @csrf
