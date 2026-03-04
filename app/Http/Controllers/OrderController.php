@@ -17,6 +17,11 @@ class OrderController extends Controller
 {
     public function checkout(Request $request)
     {
+
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', '請先登入後再進行結帳，以累積會員點數！');
+        };
+
         // 1. 從 Session 拿出購物車
         // 想像 Session 是一個購物籃，我們用 get('cart') 把它拿出來
         $cart = Session::get('cart');
@@ -24,6 +29,10 @@ class OrderController extends Controller
         if (!$cart) {
             return redirect()->back()->with('error', '購物車是空的!');
         }
+
+        // 取得當前登入者 (若沒登入，user_id 會是 null)
+        $userId = auth()->id();
+
         //2. 開啟「資料庫交易模式」
         //沒有 commit，都不行正式存進去
         DB::beginTransaction();
@@ -31,6 +40,7 @@ class OrderController extends Controller
         try {
             // --- A. 建立訂單主檔 (Order) ---
             $order = new Order(); // 建立一個新的訂單物件
+            $order->user_id = $userId;
             $order->total_price = $request->total_price; // 從前端表單接收總金額存入
             $order->status = 'pending';// 剛建立時，狀態先設為「處理中」
             $order->save();// 存檔！這時資料庫會自動產生一個 order.id
@@ -62,6 +72,8 @@ class OrderController extends Controller
                 $product->stock -= $details['quantity'];
                 $product->save();
             }
+
+            DB::select('CALL update_user_level(?)', [$userId]);
             DB::commit();
 
             // 清空購物車，因為已經買單了
@@ -75,7 +87,7 @@ class OrderController extends Controller
             // 你的訂單不會產生，庫存也不會被亂扣，保證資料安全。
             DB::rollBack();
 
-            return redirect()->back()->with('error','結帳失敗：'.$e->getMessage());
+            return redirect()->back()->with('error', '結帳失敗：'.$e->getMessage());
         }
     }
 }
