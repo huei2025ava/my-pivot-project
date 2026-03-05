@@ -373,7 +373,7 @@
                         <tr>
                             <td>
                                 <div class="item-name">{{ $item->product->name }}</div>
-                                <div class="item-id">商品 ID：#{{ $item->product_id }}</div>
+                                <div class="item-id">商品 ID：{{ $item->product_id }}</div>
                             </td>
                             <td class="text-end item-price">NT$ {{ number_format($item->price) }}</td>
                             <td class="text-center">

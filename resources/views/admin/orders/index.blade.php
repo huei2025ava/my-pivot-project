@@ -171,7 +171,7 @@
         <tbody>
             @foreach($orders as $order)
             <tr>
-                <td class="order-id">#{{ $order->id }}</td>
+                <td class="order-id">{{ $order->id }}</td>
 
                 <td>
                     <div style="display:flex; align-items:center; gap:10px;">

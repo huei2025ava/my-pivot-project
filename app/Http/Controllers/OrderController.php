@@ -22,6 +22,10 @@ class OrderController extends Controller
             return redirect()->route('login')->with('error', '請先登入後再進行結帳，以累積會員點數！');
         };
 
+        if (auth()->user()->role === 'admin' || auth()->user()->name === 'admin') {
+            return back()->with('error', '管理員帳號僅供管理使用，無法購買商品。');
+        }
+
         // 1. 從 Session 拿出購物車
         // 想像 Session 是一個購物籃，我們用 get('cart') 把它拿出來
         $cart = Session::get('cart');

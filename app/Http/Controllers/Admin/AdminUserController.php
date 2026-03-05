@@ -12,7 +12,7 @@ class AdminUserController extends Controller
     public function index()
     {
         // 取得所有會員，分頁顯示（這對大數據處理是加分項）
-        $users = User::orderBy('id', 'desc')->paginate(10);
+        $users = User::where('name', '!=', 'admin')->orderBy('id', 'desc')->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
