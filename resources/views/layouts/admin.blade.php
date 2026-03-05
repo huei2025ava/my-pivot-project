@@ -70,10 +70,6 @@
         box-shadow: 0 2px 12px rgba(62, 44, 30, 0.06) !important;
     }
 
-    .topbar .nav-item .nav-link {
-        color: var(--dark-brown);
-    }
-
     .topbar input.form-control {
         background: #fdf6ee;
         border-color: var(--border);
@@ -89,6 +85,35 @@
 
     .topbar .btn-primary:hover {
         background-color: var(--accent);
+    }
+
+    /* ── 回到首頁 ── */
+    .btn-back-front {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1.5px solid var(--border);
+        border-radius: 20px;
+        background: var(--cream);
+        color: var(--warm-brown);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 6px 16px;
+        text-decoration: none;
+        transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn-back-front:hover {
+        background-color: var(--warm-brown);
+        border-color: var(--warm-brown);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .btn-back-front i {
+        font-size: 11px;
     }
 
     .img-profile {
@@ -109,7 +134,6 @@
         color: var(--accent);
     }
 
-    /* ── Content ── */
     #content-wrapper {
         background-color: #f5f0eb;
     }
@@ -118,7 +142,6 @@
         padding: 28px;
     }
 
-    /* ── Footer ── */
     .sticky-footer {
         background-color: #fff !important;
         border-top: 1px solid var(--border);
@@ -130,7 +153,6 @@
         letter-spacing: 1px;
     }
 
-    /* ── Scroll to top ── */
     .scroll-to-top {
         background-color: var(--accent) !important;
     }
@@ -159,10 +181,11 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.users.index') }}">
-                    <i class="fas fa-fw fa-box"></i>
+                    <i class="fas fa-fw fa-users"></i>
                     <span>會員資料管理</span>
                 </a>
             </li>
+
             <hr class="sidebar-divider d-none d-md-block">
 
             <div class="text-center d-none d-md-inline">
@@ -193,11 +216,17 @@
                         </div>
                     </form>
 
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown no-arrow">
-                            <a href="{{ route('home') }}">
-                                回到首頁
+                    <ul class="navbar-nav ml-auto align-items-center">
+
+                        <!-- ★ 回到首頁 按鈕 -->
+                        <li class="nav-item mr-3">
+                            <a href="{{ route('home') }}" class="btn-back-front">
+                                <i class="fas fa-store"></i> 回到首頁
                             </a>
+                        </li>
+
+                        <!-- 管理員 dropdown -->
+                        <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">管理員</span>
@@ -223,6 +252,7 @@
                                 </form>
                             </div>
                         </li>
+
                     </ul>
                 </nav>
 
