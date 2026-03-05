@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2026-03-05 07:51:37
+-- 產生時間： 2026-03-05 18:52:36
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -173,8 +173,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2026_01_14_061256_create_cloths_table', 1),
 (7, '2026_01_28_064925_add_role_to_users_table', 1),
 (8, '2026_02_05_011403_create_orders_table', 1),
-(11, '2026_02_05_011512_create_order_items_table', 2),
-(12, '2026_03_05_023312_add_soft_deletes_to_products_table', 2);
+(9, '2026_02_05_011512_create_order_items_table', 1),
+(10, '2026_03_05_023312_add_soft_deletes_to_products_table', 1);
 
 -- --------------------------------------------------------
 
@@ -184,19 +184,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `total_price` decimal(10,2) NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 傾印資料表的資料 `orders`
---
-
-INSERT INTO `orders` (`id`, `user_id`, `total_price`, `status`, `created_at`, `updated_at`) VALUES
-(2, 2, 1400.00, 'pending', '2026-03-04 22:51:12', '2026-03-04 22:51:12');
 
 -- --------------------------------------------------------
 
@@ -213,14 +205,6 @@ CREATE TABLE `order_items` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- 傾印資料表的資料 `order_items`
---
-
-INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(2, 2, 12, 1, 850.00, '2026-03-04 22:51:12', '2026-03-04 22:51:12'),
-(3, 2, 4, 1, 550.00, '2026-03-04 22:51:12', '2026-03-04 22:51:12');
 
 -- --------------------------------------------------------
 
@@ -256,21 +240,21 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `img`, `stock`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '奧拉夫達摩藍色零錢包', 290.00, 'oblue.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(2, 'SNOOPY 冰淇淋造型吊飾', 390.00, '1772692518_CLvo9.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:35:18', NULL),
-(3, 'OLAF 冰淇淋造型吊飾', 390.00, '1772692526_mGtIa.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:35:26', NULL),
-(4, '史努比卡其色斜背小包', 550.00, 'syebag.jpg', 9, '2026-03-04 22:31:08', '2026-03-04 22:51:12', NULL),
-(5, '史努比黑色斜背小包', 550.00, 'ssbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(6, '奧拉夫軍綠色斜背小包', 550.00, 'sgrebag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(7, '史努比大頭造型抱枕', 980.00, 'snake.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(8, '史努比粉色手提麻布袋', 420.00, 'sbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(9, 'SNOOPY 經典手提麻布袋', 420.00, 'sbigbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(10, 'OLAF 經典手提麻布袋', 420.00, 'obag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(11, '史努比與奧拉夫條紋提袋', 720.00, 'allbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(12, '史努比黃色保溫杯', 850.00, 'yecup.jpg', 9, '2026-03-04 22:31:08', '2026-03-04 22:51:12', NULL),
-(13, '奧拉夫米色保溫杯', 850.00, 'ocup.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(14, '史努比彩色條紋大提袋', 680.00, 'scolorbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL),
-(15, '奧拉夫彩色條紋大提袋', 680.00, 'ocolorbag.jpg', 10, '2026-03-04 22:31:08', '2026-03-04 22:31:08', NULL);
+(1, '奧拉夫達摩藍色零錢包', 290.00, 'oblue.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(2, 'SNOOPY 冰淇淋造型吊飾', 390.00, 'sice.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(3, 'OLAF 冰淇淋造型吊飾', 390.00, 'oice.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(4, '史努比卡其色斜背小包', 550.00, 'syebag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(5, '史努比黑色斜背小包', 550.00, 'ssbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(6, '奧拉夫軍綠色斜背小包', 550.00, 'sgrebag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(7, '史努比大頭造型抱枕', 980.00, 'snake.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(8, '史努比粉色手提麻布袋', 420.00, 'sbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(9, 'SNOOPY 經典手提麻布袋', 420.00, 'sbigbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(10, 'OLAF 經典手提麻布袋', 420.00, 'obag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(11, '史努比與奧拉夫條紋提袋', 720.00, 'allbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(12, '史努比黃色保溫杯', 850.00, 'yecup.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(13, '奧拉夫米色保溫杯', 850.00, 'ocup.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(14, '史努比彩色條紋大提袋', 680.00, 'scolorbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL),
+(15, '奧拉夫彩色條紋大提袋', 680.00, 'ocolorbag.webp', 10, '2026-03-05 09:34:51', '2026-03-05 09:34:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -287,14 +271,6 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- 傾印資料表的資料 `sessions`
---
-
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('e2UPWaxjy2K6r5xIuOx3fPfe4px9uVFG3qmplr0t', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiY0RnSFlzQ0lLd25ySmc5emhYbGRweVE1RURyd0FuVWgyQjVZRExldCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1772692529),
-('MBrAF2n3hGl2rCSSDhyh3P1XskcXGTYJicIdtGsb', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiMURYNkc2bUFzb0cwRmxxN1NhdHJWRXI0bXoyMXJDazQzamtON1JNQiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9jYXJ0IjtzOjU6InJvdXRlIjtzOjEwOiJjYXJ0LmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1772693473);
-
 -- --------------------------------------------------------
 
 --
@@ -306,7 +282,6 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL DEFAULT 'user',
-  `level` varchar(255) NOT NULL DEFAULT 'Normal',
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -318,10 +293,10 @@ CREATE TABLE `users` (
 -- 傾印資料表的資料 `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `role`, `level`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@gmail.com', 'admin', 'Normal', '2026-03-04 22:31:08', '$2y$12$93cNhAgJUbz7zHdsvHpJbekaL/nuE0d8aAjXVlklLwP9Q2HedUb3q', 'msuIr50PBr', '2026-03-04 22:31:08', '2026-03-04 22:31:08'),
-(2, 'user', 'user@gmail.com', 'user', 'Normal', '2026-03-04 22:31:08', '$2y$12$0j37Rb.1phxVFH6JbwSxkuEpEKiXw4lYEaKWKKO4z.9rldxikUeee', 'BMX69EKDW7EnbxHGmZq1tJI0f68W7jjzsZ5OB98cLcp3y6OwTFsMVx5nIBmz', '2026-03-04 22:31:08', '2026-03-04 22:31:08'),
-(3, 'user02', 'user02@gmail.com', 'user', 'Normal', '2026-03-04 22:31:08', '$2y$12$p4tJRYFMACrKNe/rZY.83.r9.E/LyjpH7WHtqSASewmw.Z1/AN8sW', 'DLq8AzJYNW', '2026-03-04 22:31:08', '2026-03-04 22:31:08');
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin', '2026-03-05 09:34:50', '$2y$12$Sb0jFZknyZxbuIo.nd3mHOYklp/BYWzmzj84nkFzYm1b96veYyr/a', 'UyPR78inuc', '2026-03-05 09:34:51', '2026-03-05 09:34:51'),
+(2, 'user', 'user@gmail.com', 'user', '2026-03-05 09:34:51', '$2y$12$4I9stv8MiA96slO5GXa/FubZ2yPXAOfRYg6/v39OVhWkxA2U7DmNa', 'XJQMEneUh3', '2026-03-05 09:34:51', '2026-03-05 09:34:51'),
+(3, 'user02', 'user02@gmail.com', 'user', '2026-03-05 09:34:51', '$2y$12$HQfPe/GqC3q3NoKlOkoE6OuAJLF.RljzLgvEGkXr8XS18P/JCYWyK', 'UNInH4vr7T', '2026-03-05 09:34:51', '2026-03-05 09:34:51');
 
 --
 -- 已傾印資料表的索引
@@ -450,19 +425,19 @@ ALTER TABLE `jobs`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `products`
