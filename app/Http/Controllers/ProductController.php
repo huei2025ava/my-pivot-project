@@ -14,8 +14,11 @@ class ProductController extends Controller
     {
         $products = Product::all();
 
-        $totalProducts = $products->count();
-        $totalPrice = $products->sum('price');
+        $totalProducts = $products ->sum('stock');
+        $totalPrice = $products->sum(function ($product) {
+            return $product->price * $product->stock;
+        });
+        
         return view('admin.products', compact('products', 'totalProducts', 'totalPrice'));
     }
 
