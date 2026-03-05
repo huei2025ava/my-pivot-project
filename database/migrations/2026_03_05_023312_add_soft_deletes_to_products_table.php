@@ -11,8 +11,10 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            // 這行會自動增加一個名為 'deleted_at' 的欄位，且預設為 NULL
+            // 只有在 deleted_at 欄位不存在時才新增
+        if (!Schema::hasColumn('products', 'deleted_at')) {
             $table->softDeletes();
+        }
         });
     }
 
