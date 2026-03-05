@@ -8,6 +8,10 @@ use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\File; //處理檔案（刪除、移動、檢查是否存在）的工具箱，使用 File 的 methods
 use Illuminate\Support\Str;
 
+// 引入 Intervention Image (V3 寫法)
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 class ProductController extends Controller
 {
     public function index()
@@ -49,19 +53,21 @@ class ProductController extends Controller
         $imageName = null;
 
         if ($request->hasFile('img')) {
-            $file = $request->file('img');
+            // 1. 初始化圖片管理器
+            $manager = new ImageManager(new Driver());
 
-            $extension = $file->getClientOriginalExtension();
+            // 2. 讀取上傳的檔案
+            $image = $manager->read($request->file('img'));
 
-            // dd($extension);
+            // 3. 調整尺寸 (等比例縮放至寬度 800px，避免大圖吃頻寬)
+            $image->scale(width: 800);
 
-            $imageName = time() . '_' . Str::random(5) . '.' . $extension;
+            // 4. 設定新檔名 (統一用 .webp)
+            $imageName = time() . '_' . Str::random(5) . '.webp';
 
-            // dd($imageName);
-
-            $file->move(public_path('image'), $imageName);
-            // $path = $request->file('img')->store('products', 'public');
-            // $validatedData['img'] = $path;
+            // 5. 轉換並存檔到 public/image 
+            // quality: 80 是平衡畫質與檔案大小的最佳點
+            $image->toWebp(80)->save(public_path('image/' . $imageName));
         }
 
         // C. 寫入資料庫
@@ -102,13 +108,15 @@ class ProductController extends Controller
             if (File::exists($oldImagePath)) {
                 File::delete($oldImagePath);
             }
-            // 儲存新圖
-            $file = $request->file('img');
+            // 處理新圖轉 WebP
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($request->file('img'));
 
-            $extension = $file->getClientOriginalExtension();
-            $imageName = time() . '_' . Str::random(5) . '.' . $extension;
+            // 縮圖並轉碼
+            $image->scale(width: 800);
+            $imageName = time() . '_' . Str::random(5) . '.webp';
 
-            $file->move(public_path('image'), $imageName);
+            $image->toWebp(80)->save(public_path('image/' . $imageName));
         }
 
         // 3. 更新資料庫

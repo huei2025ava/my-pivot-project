@@ -302,7 +302,7 @@
     <!-- 3. Logo -->
     <div class="logo-bar">
       <a href="{{ route('home') }}">
-        <img src="{{ asset('image/logo.png') }}" alt="Snoopy Store" />
+        <img src="{{ asset('image/logo.webp') }}" alt="Snoopy Store" />
       </a>
     </div>
 

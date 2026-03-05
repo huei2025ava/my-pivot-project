@@ -12,13 +12,13 @@
   </div>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="{{ asset('image/powerup.jpg') }}" class="d-block img-fluid w-100" alt="..." />
+      <img src="{{ asset('image/powerup.webp') }}" class="d-block img-fluid w-100" alt="..." />
     </div>
     <div class="carousel-item">
-      <img src="{{ asset('image/happylove.jpg') }}" class="d-block img-fluid w-100" alt="..." />
+      <img src="{{ asset('image/happylove.webp') }}" class="d-block img-fluid w-100" alt="..." />
     </div>
     <div class="carousel-item">
-      <img src="{{ asset('image/loveproduct.jpg') }}" class="d-block img-fluid w-100" alt="..." />
+      <img src="{{ asset('image/loveproduct.webp') }}" class="d-block img-fluid w-100" alt="..." />
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
