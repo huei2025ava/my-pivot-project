@@ -45,6 +45,6 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
     Route::patch('/users/{user}/level', [AdminUserController::class, 'updateLevel'])->name('admin.users.updateLevel');
 
     // 3. 新增：訂單管理 (對應妳的需求：顯示訂單與查看明細)
-    // Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
-    // Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
 });

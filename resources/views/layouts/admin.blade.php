@@ -185,6 +185,12 @@
                     <span>會員資料管理</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.orders.index') }}">
+                    <i class="fas fa-fw fa-shopping-cart"></i>
+                    <span>訂單管理</span>
+                </a>
+            </li>
 
             <hr class="sidebar-divider d-none d-md-block">
 
