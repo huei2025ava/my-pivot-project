@@ -16,7 +16,7 @@ class ProductController extends Controller
 
         $totalProducts = $products->count();
         $totalPrice = $products->sum('price');
-        return view('admin_products', compact('products', 'totalProducts', 'totalPrice'));
+        return view('admin.products', compact('products', 'totalProducts', 'totalPrice'));
     }
 
     public function show($id)
