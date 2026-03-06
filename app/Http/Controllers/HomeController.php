@@ -11,4 +11,10 @@ class HomeController extends Controller
         $products = Product::all();
         return view('welcome', compact('products'));
     }
+
+    public function show($id){
+    $product = Product::findOrFail($id);
+    return view('products', compact('product'));
+    
+}
 }
