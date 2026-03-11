@@ -200,7 +200,7 @@
                 <p class="total-amount mb-1">NT$ {{ number_format($total) }}</p>
                 <p style="font-size:12px; color:var(--text-soft); margin-bottom:24px;">含稅 · 不含運費</p>
                 <div style="border-top:1px solid var(--border); margin-bottom:24px;"></div>
-                @if(auth()->user()->name !== 'admin')
+                @if(auth()->user()?->name !== 'admin')
                 <form action="{{ route('checkout') }}" method="POST">
                     @csrf
                     <input type="hidden" name="total_price" value="{{ $total }}">
