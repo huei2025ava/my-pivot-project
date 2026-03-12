@@ -177,7 +177,7 @@
 
         {{-- Image with hover overlay --}}
         <div class="product-img-wrap">
-          <a href="{{ route('home', $item->id) }}" class="d-block w-100 h-100">
+          <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
             <img src="{{ asset('image/' . $item->img) }}" alt="{{ $item->name }}" />
           </a>
 
