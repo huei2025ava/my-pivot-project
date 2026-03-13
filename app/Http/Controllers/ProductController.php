@@ -131,12 +131,8 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        $imagePath = public_path('image/'. $product->img);
 
-        if (File::exists($imagePath)) {
-            File::delete($imagePath);
-        }
-
+        // 只執行軟刪除，不要寫 File::delete
         $product->delete();
 
         return redirect()->route('admin.index')->with('success', '商品與圖片已成功移除！');
