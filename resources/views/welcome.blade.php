@@ -177,11 +177,19 @@
         <div class="col-6 col-lg-3">
             <div class="card product-card h-100">
 
+<<<<<<< HEAD
                 {{-- Image with hover overlay --}}
                 <div class="product-img-wrap">
                     <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
                         <img src="{{ asset('image/' . $item->img) }}" alt="{{ $item->name }}" />
                     </a>
+=======
+        {{-- Image with hover overlay --}}
+        <div class="product-img-wrap">
+          <a href="{{ route('product.show', $item->id) }}" class="d-block w-100 h-100">
+            <img src="{{ asset('image/' . $item->img) }}" alt="{{ $item->name }}" />
+          </a>
+>>>>>>> 86edfa3d0735437970d68d08b867d0085e32126a
 
                     {{-- Overlay form — sits on top of the image --}}
                     <form action="{{ route('add.to.cart', $item->id) }}" method="POST">

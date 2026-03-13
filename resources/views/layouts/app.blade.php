@@ -295,7 +295,10 @@
 
       <a href="{{ route('cart.index') }}" class="utility-link" style="text-decoration:none;">
         <i class="fas fa-shopping-bag"></i> 購物車
-        <span class="cart-count">0</span>
+        <span class="cart-count" id="cart-count-nav">
+          {{-- 直接在後端計算好填入 --}}
+          {{ array_sum(array_column(session('cart', []), 'quantity')) }}
+        </span>
       </a>
     </div>
 

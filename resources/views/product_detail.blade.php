@@ -224,6 +224,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         {{-- Right: info --}}
         <div class="col-md-6 detail-info">
 
@@ -273,6 +274,19 @@
             </div>
 
         </div>
+=======
+      <div class="d-flex gap-3 flex-wrap">
+        <form action="{{ route('add.to.cart', $product->id) }}" method="POST">
+          @csrf
+          <button type="submit" class="btn-add-cart">
+            <i class="fas fa-shopping-bag me-2"></i> 加入購物車
+          </button>
+        </form>
+        <a href="{{ route('home') }}" class="btn-back">
+          ← 回到首頁
+        </a>
+      </div>
+>>>>>>> 86edfa3d0735437970d68d08b867d0085e32126a
     </div>
 </div>
 

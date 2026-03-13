@@ -217,13 +217,36 @@
         </div>
     </div>
 
-    @else
-    <div class="empty-cart">
-        <span class="icon">🛍️</span>
-        <p style="font-size:16px; margin-bottom:8px;">購物袋目前空空如也</p>
-        <p style="font-size:14px;">快去 <a href="{{ route('home') }}">逛逛商品</a> 吧！</p>
+    <div class="col-lg-4">
+        <div class="cart-summary-box">
+            <p class="total-label mb-2">訂單總計</p>
+            <p class="total-amount mb-1">NT$ {{ number_format($total) }}</p>
+            <p style="font-size:12px; color:var(--text-soft); margin-bottom:24px;">含稅 · 不含運費</p>
+            <div style="border-top:1px solid var(--border); margin-bottom:24px;"></div>
+            @if(auth()->user()?->name !== 'admin')
+            <form action="{{ route('checkout') }}" method="POST">
+                @csrf
+                <input type="hidden" name="total_price" value="{{ $total }}">
+                <button type="submit" class="btn-checkout">
+                    <i class="fas fa-lock me-2" style="font-size:12px;"></i> 確認結帳
+                </button>
+                @else
+                <div class="alert alert-warning">
+                    您目前是以管理員身分登入，不開放購買功能。
+                </div>
+                @endif
+            </form>
+        </div>
     </div>
-    @endif
+</div>
+
+@else
+<div class="empty-cart">
+    <span class="icon">🛍️</span>
+    <p style="font-size:16px; margin-bottom:8px;">購物袋目前空空如也</p>
+    <p style="font-size:14px;">快去 <a href="{{ route('home') }}">逛逛商品</a> 吧！</p>
+</div>
+@endif
 </div>
 
 @endsection

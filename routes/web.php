@@ -32,8 +32,12 @@ Route::post('/logout',[LoginController::class, 'logout'])->name('logout');
 
 // 前台
 Route::get('/', [HomeController::class, 'index'])->name('home');
+<<<<<<< HEAD
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
+=======
+Route::get('/product/{id}', [HomeController::class, 'show'])->name('product.show');
+>>>>>>> 86edfa3d0735437970d68d08b867d0085e32126a
 
 // 後台
 Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
