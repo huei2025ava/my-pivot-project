@@ -169,12 +169,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $total = 0 @endphp
                         @foreach($cart as $id => $details)
-                        @php
-                        $total += $details['price'] * $details['quantity'];
-                        $product = \App\Models\Product::find($id);
-                        @endphp
+                        {{-- 使用 Controller 傳來的 productStocks 判斷 --}}
+                        @if(isset($productStocks[$id]))
                         <tr>
                             <td>
                                 <img src="{{ asset('image/' . $details['img']) }}" class="cart-product-img">
@@ -183,11 +180,12 @@
                             <td class="price-text">NT$ {{ number_format($details['price']) }}</td>
                             <td>
                                 <input type="number" value="{{ $details['quantity'] }}" min="1"
-                                    max="{{ $product->stock }}" class="qty-input update-cart" data-id="{{ $id }}">
+                                    max="{{ $productStocks[$id] }}" class="qty-input update-cart" data-id="{{ $id }}">
                             </td>
                             <td class="price-text">NT$ {{ number_format($details['price'] * $details['quantity']) }}
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -197,7 +195,7 @@
         <div class="col-lg-4">
             <div class="cart-summary-box">
                 <p class="total-label mb-2">訂單總計</p>
-                <p class="total-amount mb-1">NT$ {{ number_format($total) }}</p>
+                <p class="total-amount mb-1">NT$ {{ number_format($totalPrice) }}</p>
                 <p style="font-size:12px; color:var(--text-soft); margin-bottom:24px;">含稅 · 不含運費</p>
                 <div style="border-top:1px solid var(--border); margin-bottom:24px;"></div>
                 @if(auth()->user()?->name !== 'admin')
@@ -217,27 +215,6 @@
         </div>
     </div>
 
-    <div class="col-lg-4">
-        <div class="cart-summary-box">
-            <p class="total-label mb-2">訂單總計</p>
-            <p class="total-amount mb-1">NT$ {{ number_format($total) }}</p>
-            <p style="font-size:12px; color:var(--text-soft); margin-bottom:24px;">含稅 · 不含運費</p>
-            <div style="border-top:1px solid var(--border); margin-bottom:24px;"></div>
-            @if(auth()->user()?->name !== 'admin')
-            <form action="{{ route('checkout') }}" method="POST">
-                @csrf
-                <input type="hidden" name="total_price" value="{{ $total }}">
-                <button type="submit" class="btn-checkout">
-                    <i class="fas fa-lock me-2" style="font-size:12px;"></i> 確認結帳
-                </button>
-                @else
-                <div class="alert alert-warning">
-                    您目前是以管理員身分登入，不開放購買功能。
-                </div>
-                @endif
-            </form>
-        </div>
-    </div>
 </div>
 
 @else

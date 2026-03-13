@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Product;
 
 class CartController extends Controller
 {
-    public function addToCart(Request $request, $id) {
+    public function addToCart(Request $request, $id)
+    {
         $product = Product::findOrFail($id); //findOrFail 如果商品 ID 不存在（例如有人亂改網址），它會直接回傳 404 頁面
         $cart = session()->get('cart', []);
-        
+
         if (isset($cart[$id])) {
             // 情況 A：籃子裡已經有這個商品了
-           $cart[$id]['quantity']++;
-        }else{
+            $cart[$id]['quantity']++;
+        } else {
             // 情況 B：這是一個新商品，第一次放進籃子
             $cart[$id] = [
                 "name" => $product->name,
@@ -26,7 +26,7 @@ class CartController extends Controller
         }
         // dd($cart);
         session()->put('cart', $cart);
-        
+
         // 取得最新總數
         $cartCount = $this->getCurrentCartCount();
 
@@ -43,11 +43,26 @@ class CartController extends Controller
         return redirect()->back()->with('success', '商品已加入購物車！');
     }
 
-    public function index() {
+    public function index()
+    {
         // 從 Session 拿資料，如果沒資料就給空陣列
         $cart = session()->get('cart', []);
 
-        return view('cart.index', compact('cart'));
+        // 2. 處理 N+1 問題：一次抓出所有在購物車中的商品模型資料
+        // pluck('stock', 'id') 可以讓我們快速用 ID 當索引來查庫存
+        $productStocks = Product::whereIn('id', array_keys($cart))
+                                ->pluck('stock', 'id');
+
+        // 3. 在 Controller 算好總金額，View 只負責顯示
+        $totalPrice = 0;
+        foreach ($cart as $id => $details) {
+            // 確保商品還存在於資料庫中才計算
+            if (isset($productStocks[$id])) {
+                $totalPrice += $details['price'] * $details['quantity'];
+            }
+        }
+        // 4. 將所有變數傳給 View 'cart' => $cart,以此類推
+        return view('cart.index', compact('cart', 'productStocks', 'totalPrice'));
     }
 
     private function getCurrentCartCount()
@@ -60,7 +75,8 @@ class CartController extends Controller
         return array_sum(array_column($cart, 'quantity'));
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         //未完成
     }
 }
