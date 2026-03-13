@@ -51,8 +51,10 @@
 .cart-product-img {
     width: 64px;
     height: 64px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 8px;
+    background: var(--cream);
+    padding: 4px;
 }
 
 .qty-input {
@@ -108,6 +110,7 @@
     width: 100%;
     text-transform: uppercase;
     transition: background-color 0.2s, transform 0.15s;
+    cursor: pointer;
 }
 
 .btn-checkout:hover {
@@ -141,14 +144,14 @@
 
     @if(session('success'))
     <div class="alert"
-        style="background:#edf7ed; border:1px solid #b7ddb7; border-radius:10px; color:#2d6a2d; font-size:14px; padding:12px 20px;">
+        style="background:#edf7ed; border:1px solid #b7ddb7; border-radius:10px; color:#2d6a2d; font-size:14px; padding:12px 20px; margin-bottom:20px;">
         {{ session('success') }}
     </div>
     @endif
 
     @if(session('error'))
     <div class="alert"
-        style="background:#fdf0ee; border:1px solid #f0bfb4; border-radius:10px; color:#9b3322; font-size:14px; padding:12px 20px;">
+        style="background:#fdf0ee; border:1px solid #f0bfb4; border-radius:10px; color:#9b3322; font-size:14px; padding:12px 20px; margin-bottom:20px;">
         {{ session('error') }}
     </div>
     @endif
@@ -156,6 +159,8 @@
     @if(session('cart'))
 
     <div class="row g-4 align-items-start">
+
+        {{-- ── 左：商品表格 ── --}}
         <div class="col-lg-8">
             <div style="border-radius:16px; overflow:hidden; border:1px solid var(--border);">
                 <table class="table cart-table mb-0">
@@ -170,60 +175,87 @@
                     </thead>
                     <tbody>
                         @foreach($cart as $id => $details)
-                        {{-- 使用 Controller 傳來的 productStocks 判斷 --}}
-                        @if(isset($productStocks[$id]))
                         <tr>
+                            {{-- 圖片 --}}
                             <td>
-                                <img src="{{ asset('image/' . $details['img']) }}" class="cart-product-img">
+                                <img src="{{ asset('image/' . $details['img']) }}" class="cart-product-img"
+                                    alt="{{ $details['name'] }}">
                             </td>
-                            <td style="font-weight:600;">{{ $details['name'] }}</td>
+
+                            {{-- 名稱 --}}
+                            <td style="font-weight:600;">
+                                {{ $details['name'] }}
+                                @if($details['is_sold_out'])
+                                <br><span class="badge bg-danger" style="font-size:10px;">已完售 / 暫時下架</span>
+                                @endif
+                            </td>
+
+                            {{-- 單價 --}}
                             <td class="price-text">NT$ {{ number_format($details['price']) }}</td>
+
+                            {{-- 數量 --}}
                             <td>
+                                @if($details['is_sold_out'])
+                                <span class="text-muted">—</span>
+                                @else
                                 <input type="number" value="{{ $details['quantity'] }}" min="1"
-                                    max="{{ $productStocks[$id] }}" class="qty-input update-cart" data-id="{{ $id }}">
+                                    max="{{ $details['current_stock'] }}" class="qty-input update-cart"
+                                    data-id="{{ $id }}">
+                                @endif
                             </td>
-                            <td class="price-text">NT$ {{ number_format($details['price'] * $details['quantity']) }}
+
+                            {{-- 小計 --}}
+                            <td class="price-text">
+                                @if($details['is_sold_out'])
+                                NT$ 0
+                                @else
+                                NT$ {{ number_format($details['price'] * $details['quantity']) }}
+                                @endif
                             </td>
                         </tr>
-                        @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
+        {{-- ── 右：結帳摘要 ── --}}
         <div class="col-lg-4">
             <div class="cart-summary-box">
                 <p class="total-label mb-2">訂單總計</p>
                 <p class="total-amount mb-1">NT$ {{ number_format($totalPrice) }}</p>
                 <p style="font-size:12px; color:var(--text-soft); margin-bottom:24px;">含稅 · 不含運費</p>
                 <div style="border-top:1px solid var(--border); margin-bottom:24px;"></div>
-                @if(auth()->user()?->name !== 'admin')
+
+                @if(auth()->user()?->name === 'admin')
+                {{-- 管理員不能結帳 --}}
+                <div class="alert alert-warning" style="font-size:13px; border-radius:10px;">
+                    您目前是以管理員身分登入，不開放購買功能。
+                </div>
+                @else
+                {{-- 一般會員：結帳按鈕 --}}
                 <form action="{{ route('checkout') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="total_price" value="{{ $total }}">
+                    <input type="hidden" name="total_price" value="{{ $totalPrice }}">
                     <button type="submit" class="btn-checkout">
                         <i class="fas fa-lock me-2" style="font-size:12px;"></i> 確認結帳
                     </button>
-                    @else
-                    <div class="alert alert-warning">
-                        您目前是以管理員身分登入，不開放購買功能。
-                    </div>
-                    @endif
                 </form>
+                @endif
             </div>
         </div>
+
     </div>
 
-</div>
+    @else
+    {{-- 空購物車 --}}
+    <div class="empty-cart">
+        <span class="icon">🛍️</span>
+        <p style="font-size:16px; margin-bottom:8px;">購物袋目前空空如也</p>
+        <p style="font-size:14px;">快去 <a href="{{ route('home') }}">逛逛商品</a> 吧！</p>
+    </div>
+    @endif
 
-@else
-<div class="empty-cart">
-    <span class="icon">🛍️</span>
-    <p style="font-size:16px; margin-bottom:8px;">購物袋目前空空如也</p>
-    <p style="font-size:14px;">快去 <a href="{{ route('home') }}">逛逛商品</a> 吧！</p>
-</div>
-@endif
 </div>
 
 @endsection
@@ -231,7 +263,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(".update-cart").change(function(e) {
-    e.preventDefault()
+    e.preventDefault();
     let ele = $(this);
 
     $.ajax({
@@ -249,5 +281,5 @@ $(".update-cart").change(function(e) {
             alert('更新失敗，請檢查庫存！');
         }
     });
-})
+});
 </script>

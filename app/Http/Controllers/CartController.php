@@ -28,7 +28,7 @@ class CartController extends Controller
         session()->put('cart', $cart);
 
         // 取得最新總數
-        $cartCount = $this->getCurrentCartCount();
+        $cartCount = $this->getValidatedCart();
 
         // ✨ 關鍵判斷：如果是 AJAX 請求
         if ($request->ajax() || $request->wantsJson()) {
@@ -45,34 +45,73 @@ class CartController extends Controller
 
     public function index()
     {
-        // 從 Session 拿資料，如果沒資料就給空陣列
         $cart = session()->get('cart', []);
 
-        // 2. 處理 N+1 問題：一次抓出所有在購物車中的商品模型資料
-        // pluck('stock', 'id') 可以讓我們快速用 ID 當索引來查庫存
-        $productStocks = Product::whereIn('id', array_keys($cart))
-                                ->pluck('stock', 'id');
+        // 一次抓出所有相關商品，包含被軟刪除的
+        $productsFromDb = Product::whereIn('id', array_keys($cart))
+            ->withTrashed()
+            ->get()
+            ->keyBy('id');
 
-        // 3. 在 Controller 算好總金額，View 只負責顯示
         $totalPrice = 0;
+
+        // 建立一個處理後的購物車陣列，標記狀態
+        $processedCart = [];
         foreach ($cart as $id => $details) {
-            // 確保商品還存在於資料庫中才計算
-            if (isset($productStocks[$id])) {
+            $product = $productsFromDb->get($id);
+
+            // 判斷是否失效：資料庫找不到、已被軟刪除、或庫存 <= 0
+            $isInvalid = !$product || $product->trashed() || $product->stock <= 0;
+
+            $processedCart[$id] = $details;
+            $processedCart[$id]['img'] = $product ? $product->img : $details['img'];
+            $processedCart[$id]['is_sold_out'] = $isInvalid;
+            $processedCart[$id]['current_stock'] = $product?->stock ?? 0;
+
+            // 只有沒完售的商品才計入總價
+            if (!$isInvalid) {
                 $totalPrice += $details['price'] * $details['quantity'];
             }
         }
-        // 4. 將所有變數傳給 View 'cart' => $cart,以此類推
-        return view('cart.index', compact('cart', 'productStocks', 'totalPrice'));
+
+        return view('cart.index', [
+            'cart' => $processedCart,
+            'totalPrice' => $totalPrice
+        ]);
     }
 
-    private function getCurrentCartCount()
+    /**
+ * 取得經過驗證（在庫、未刪除）的購物車資料
+ */
+    private function getValidatedCart()
     {
-        // 從 Session 抓取購物車資料，如果沒資料就給空陣列 []
         $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            return [];
+        }
 
-        // 使用 PHP 內建函式 array_column 抽出所有的 'quantity' 欄位，再用 array_sum 加總
-        // 這樣不論裡面有幾種商品，都能算出總數量（2+1 = 3 個）
-        return array_sum(array_column($cart, 'quantity'));
+        // 一次抓出資料庫中所有「未刪除」且「庫存 > 0」的商品 ID
+        // 這樣可以解決 N+1 問題
+        $validProductIds = Product::whereIn('id', array_keys($cart))
+            ->where('stock', '>', 0)
+            ->pluck('id')
+            ->toArray();
+
+        $isUpdated = false;
+        foreach ($cart as $id => $details) {
+            // 如果該 ID 不在資料庫的有效名單內，就從 Session 移除
+            if (!in_array($id, $validProductIds)) {
+                unset($cart[$id]);
+                $isUpdated = true;
+            }
+        }
+
+        // 如果有變動，同步回 Session
+        if ($isUpdated) {
+            session()->put('cart', $cart);
+        }
+
+        return $cart;
     }
 
     public function update(Request $request)
