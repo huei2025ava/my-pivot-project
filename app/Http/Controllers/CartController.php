@@ -116,6 +116,59 @@ class CartController extends Controller
 
     public function update(Request $request)
     {
-        //未完成
+        $id = $request->id; 
+        $quantity = $request->input('quantity');
+        $product = Product::findOrFail($id);
+
+        // 1. 安全檢查：數量不可小於 1
+        if ($quantity < 1) {
+            return response()->json(['error' => '數量至少為 1'], 400);
+        }
+
+        // 2. 庫存檢查
+        if ($quantity > $product->stock) {
+            return response()->json(['error' => '庫存不足，剩餘：' . $product->stock], 400);
+        }
+
+        // 3. 更新 Session 資料
+        $cart = session()->get('cart', []);
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] = $quantity;
+            session()->put('cart', $cart);
+        }
+
+        // 4. 計算新小計與總金額
+        $subtotal = $cart[$id]['price'] * $cart[$id]['quantity'];
+        $total = collect($cart)->sum(fn ($item) => $item['price'] * $item['quantity']);
+        $cartCount = collect($cart)->sum('quantity');
+
+        return response()->json([
+            'message' => '購物車已更新',
+            'subtotal' => number_format($subtotal),
+            'total' => number_format($total),
+            'cartCount' => $cartCount
+        ]);
+    }
+
+    public function remove($id)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+
+        $total = number_format(collect($cart)->sum(fn ($item) => $item['price'] * $item['quantity']));
+        $cartCount = collect($cart)->sum('quantity');
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'total' => $total,
+                'cartCount' => $cartCount
+            ]);
+        }
+
+        return redirect()->back()->with('success', '商品已移除');
     }
 }
