@@ -164,7 +164,126 @@
     margin-bottom: 14px;
 }
 
-/* ── 刪除 / 編輯按鈕：固定相同尺寸 ── */
+/* ══ 自訂刪除 Confirm Modal ══ */
+.delete-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 18, 10, 0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-modal-overlay.show {
+    display: flex;
+}
+
+.delete-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    width: 320px;
+    max-width: 92vw;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(62, 44, 30, 0.2);
+    animation: delModalIn 0.2s ease;
+}
+
+@keyframes delModalIn {
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.delete-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fdf0ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: #c0392b;
+    font-size: 20px;
+}
+
+.delete-modal h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark-brown);
+    margin-bottom: 6px;
+}
+
+.delete-modal-product-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 6px 14px;
+    display: inline-block;
+    margin-bottom: 20px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.delete-modal p {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.delete-modal-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-del-cancel {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-soft);
+    font-size: 13px;
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-del-cancel:hover {
+    border-color: var(--warm-brown);
+    color: var(--warm-brown);
+}
+
+.btn-del-confirm {
+    flex: 1;
+    background: #c0392b;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-del-confirm:hover {
+    background: #a93226;
+}
+
 .btn-action {
     display: inline-flex;
     align-items: center;
@@ -310,8 +429,49 @@
 
 .file-input-wrap {
     margin-top: 10px;
+}
+
+/* 隱藏原生 input，用自訂按鈕取代 */
+.file-input-wrap input[type="file"] {
+    display: none;
+}
+
+.file-input-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--white);
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    color: var(--warm-brown);
     font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.file-input-label:hover {
+    border-color: var(--warm-brown);
+    background-color: var(--cream);
+    color: var(--dark-brown);
+}
+
+.file-input-label i {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.file-name-display {
+    margin-top: 6px;
+    font-size: 11px;
     color: var(--text-soft);
+    letter-spacing: 0.5px;
+    text-align: center;
+    min-height: 16px;
 }
 
 .btn-modal-confirm {
@@ -346,6 +506,22 @@
     border-color: var(--warm-brown);
 }
 </style>
+
+{{-- ══ 自訂刪除確認 Modal ══ --}}
+<div class="delete-modal-overlay" id="deleteModal">
+    <div class="delete-modal">
+        <div class="delete-modal-icon">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        <h4>確定要刪除嗎？</h4>
+        <div class="delete-modal-product-name" id="deleteProductName"></div>
+        <p>刪除後商品將會下架，<br>此操作無法復原。</p>
+        <div class="delete-modal-btns">
+            <button class="btn-del-cancel" id="delModalCancel">取消</button>
+            <button class="btn-del-confirm" id="delModalConfirm">確定刪除</button>
+        </div>
+    </div>
+</div>
 
 {{-- ── Header ── --}}
 <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
@@ -407,11 +583,12 @@
 
                 {{-- 刪除 / 編輯：同一個 d-flex，fixed width 按鈕 ── --}}
                 <div class="d-flex justify-content-center gap-2">
-                    <form action="{{ route('products.destroy', $item->id) }}" method="POST" class="m-0">
+                    <form action="{{ route('products.destroy', $item->id) }}" method="POST" class="m-0 delete-form"
+                        id="delete-form-{{ $item->id }}">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn-action btn-delete"
-                            onclick="return confirm('確定刪除「{{ $item->name }}」嗎？')">
+                        <button type="button" class="btn-action btn-delete btn-open-delete-modal"
+                            data-id="{{ $item->id }}" data-name="{{ $item->name }}">
                             <i class="fas fa-trash-alt" style="font-size:10px;"></i> 刪除
                         </button>
                     </form>
@@ -451,7 +628,12 @@
 
                         <label class="modal-field-label">更換圖片</label>
                         <div class="file-input-wrap">
-                            <input type="file" name="img" onchange="unifiedPreview(event, '{{ $item->id }}')">
+                            <label class="file-input-label" for="file-edit-{{ $item->id }}">
+                                <i class="fas fa-image"></i> 選擇圖片檔案
+                            </label>
+                            <input type="file" id="file-edit-{{ $item->id }}" name="img"
+                                onchange="unifiedPreview(event, '{{ $item->id }}'); updateFileName(this, 'fname-edit-{{ $item->id }}')">
+                            <div class="file-name-display" id="fname-edit-{{ $item->id }}">尚未選擇檔案</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -492,7 +674,12 @@
                         <img id="preview-new" src="#" alt="預覽圖">
                     </div>
                     <div class="file-input-wrap">
-                        <input type="file" name="img" onchange="unifiedPreview(event, 'new')" required>
+                        <label class="file-input-label" for="file-new">
+                            <i class="fas fa-image"></i> 選擇圖片檔案
+                        </label>
+                        <input type="file" id="file-new" name="img"
+                            onchange="unifiedPreview(event, 'new'); updateFileName(this, 'fname-new')" required>
+                        <div class="file-name-display" id="fname-new">尚未選擇檔案</div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -506,16 +693,57 @@
 
 
 <script>
+// ── 圖片預覽 ──
 function unifiedPreview(event, id) {
     const file = event.target.files[0];
     const previewImg = document.getElementById('preview-' + id);
     if (file && previewImg) {
         previewImg.src = URL.createObjectURL(file);
         previewImg.style.display = 'block';
-        // 新增商品：顯示外框
         const wrap = document.getElementById('preview-new-wrap');
         if (wrap) wrap.style.display = 'flex';
     }
+}
+
+function updateFileName(input, displayId) {
+    const display = document.getElementById(displayId);
+    if (!display) return;
+    if (input.files && input.files.length > 0) {
+        display.textContent = input.files[0].name;
+        display.style.color = 'var(--warm-brown)';
+    } else {
+        display.textContent = '尚未選擇檔案';
+        display.style.color = 'var(--text-soft)';
+    }
+}
+
+// ── 自訂刪除 Confirm Modal ──
+let pendingDeleteId = null;
+
+document.querySelectorAll('.btn-open-delete-modal').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        pendingDeleteId = this.dataset.id;
+        document.getElementById('deleteProductName').textContent = this.dataset.name;
+        document.getElementById('deleteModal').classList.add('show');
+    });
+});
+
+document.getElementById('delModalCancel').addEventListener('click', closeDeleteModal);
+
+// 點遮罩關閉
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+
+document.getElementById('delModalConfirm').addEventListener('click', function() {
+    if (!pendingDeleteId) return;
+    document.getElementById('delete-form-' + pendingDeleteId).submit();
+    closeDeleteModal();
+});
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    pendingDeleteId = null;
 }
 </script>
 @endsection
