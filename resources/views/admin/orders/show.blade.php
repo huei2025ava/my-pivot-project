@@ -372,7 +372,12 @@
                         @foreach($order->items as $item)
                         <tr>
                             <td>
-                                <div class="item-name">{{ $item->product->name }}</div>
+                                <div class="item-name">{{ $item->product->name ?? '商品已永久刪除'}}</div>
+                                @if($item->product && $item->product->trashed())
+                                <span class="badge bg-secondary ms-2" style="font-size: 11px;">
+                                    <i class="fas fa-arrow-down me-1"></i>已下架
+                                </span>
+                                @endif
                                 <div class="item-id">商品 ID：{{ $item->product_id }}</div>
                             </td>
                             <td class="text-end item-price">NT$ {{ number_format($item->price) }}</td>

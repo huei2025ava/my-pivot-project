@@ -19,8 +19,10 @@ class AdminOrderController extends Controller
     // 訂單明細頁
     public function show(Order $order)
     {
-        // 載入這張訂單底下的所有明細，並且連動抓出商品名稱
-        $order->load('items.product'); 
+        // ✨ 修改後的寫法：使用閉包（Closure）來包含軟刪除的資料
+        $order->load(['items.product' => function ($query) {
+            $query->withTrashed();
+        }]);
         return view('admin.orders.show', compact('order'));
     }
 }
