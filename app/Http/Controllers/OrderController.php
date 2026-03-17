@@ -37,6 +37,13 @@ class OrderController extends Controller
         // 取得當前登入者 (若沒登入，user_id 會是 null)
         $userId = auth()->id();
 
+        // ✨ 在後端重新計算「真正的總金額」
+        $realTotalPrice = 0;
+        foreach ($cart as $details) {
+            // 確保數量與價格都轉成整數後再相乘
+            $realTotalPrice += (int)$details['quantity'] * (int)$details['price'];
+        }
+
         //2. 開啟「資料庫交易模式」
         //沒有 commit，都不行正式存進去
         DB::beginTransaction();
@@ -45,7 +52,7 @@ class OrderController extends Controller
             // --- A. 建立訂單主檔 (Order) ---
             $order = new Order(); // 建立一個新的訂單物件
             $order->user_id = $userId;
-            $order->total_price = $request->total_price; // 從前端表單接收總金額存入
+            $order->total_price = $realTotalPrice;
             $order->status = 'pending';// 剛建立時，狀態先設為「處理中」
             $order->save();// 存檔！這時資料庫會自動產生一個 order.id
 
@@ -53,13 +60,16 @@ class OrderController extends Controller
             // $cart 是一個陣列，我們用 foreach 一個個拿出來處理
             // $id 是商品 ID，$details 是裡面的數量、價格等資訊
             foreach ($cart as $id => $details) {
+                // 💡 強制轉成整數 (int)，確保型別為數字，才能扣庫存和累積消費金額
+                $orderQty = (int) $details['quantity'];
 
                 // 1. 存入訂單明細 (OrderItem)
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;// 關聯剛剛產生的訂單 ID
                 $orderItem->product_id = $id; // $id 是商品 ID
-                $orderItem->quantity = $details['quantity']; // 購買數量
-                $orderItem->price = $details['price'];       // 購買當時的單價
+                $orderItem->quantity = $orderQty; // 購買數量
+                $orderItem->price = $details['price'];
+                ;     // 購買當時的單價
                 $orderItem->save();
 
                 // 2. 重點：扣庫存 (Product)
@@ -73,7 +83,7 @@ class OrderController extends Controller
                 }
 
                 // 扣除庫存
-                $product->stock -= $details['quantity'];
+                $product->stock -= $orderQty;
                 $product->save();
             }
 
